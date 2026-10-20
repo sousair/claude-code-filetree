@@ -1686,26 +1686,26 @@ test('files a Grep or Glob search returns shimmer as reads, relative names resol
   await ui.unmount()
 })
 
-test('the ignore setting leaves a name out of the listing, the change scan and the shimmer at any depth', { timeoutMs: 20_000, options: { ignore: '.ai-memory-data, .cache' } }, async ($, on) => {
+test('the ignore setting leaves a name out of the listing, the change scan and the shimmer at any depth', { timeoutMs: 20_000, options: { ignore: '.spool, .cache' } }, async ($, on) => {
   const ran: Ran = []
   const root = '/home/k/proj'
-  const w: World = { os: 'linux', env: { HOME: '/home/k' }, cwd: root, top: '', dirs: { [root]: [['a.ts', 'file'], ['.ai-memory-data', 'dir'], ['sub', 'dir']], [`${root}/sub`]: [['.cache', 'dir'], ['b.ts', 'file']] }, status: '', numstat: '', find: `${root}/a.ts\0${root}/.ai-memory-data/spool.json\0${root}/sub/.cache/x\0` }
-  w.tool = e => (e.tool === 'Grep' ? { result: { numFiles: 2, filenames: ['.ai-memory-data/spool.json', 'sub/b.ts'] } } : undefined)
+  const w: World = { os: 'linux', env: { HOME: '/home/k' }, cwd: root, top: '', dirs: { [root]: [['a.ts', 'file'], ['.spool', 'dir'], ['sub', 'dir']], [`${root}/sub`]: [['.cache', 'dir'], ['b.ts', 'file']] }, status: '', numstat: '', find: `${root}/a.ts\0${root}/.spool/log.json\0${root}/sub/.cache/x\0` }
+  w.tool = e => (e.tool === 'Grep' ? { result: { numFiles: 2, filenames: ['.spool/log.json', 'sub/b.ts'] } } : undefined)
   const clock = world(on, w, ran)
   await $.session.start({ cwd: root, surface: 'terminal', isInteractive: true })
   await clock.settle()
   const ui = await $.ui.mount({ plugin: 'filetree', surface: 'terminal', component: 'Pane', requestId: 'filetree', props: paneProps(60) })
   await clock.settle()
-  expect(await texts(ui)).not.toContain('.ai-memory-data')
+  expect(await texts(ui)).not.toContain('.spool')
   await $.tool.call({ tool: 'Bash', command: 'touch a.ts' } as any)
   await clock.settle()
-  expect(ran.find(a => a[0] === 'find')).toContain('.ai-memory-data')
+  expect(ran.find(a => a[0] === 'find')).toContain('.spool')
   await $.tool.call({ tool: 'Grep', pattern: 'x' } as any)
   await clock.settle()
   const shown = await texts(ui)
   expect(shown).toContain(shimmer('a.ts', 'orange'))
   expect(shown).toContain(shimmer('b.ts', 'purple'))
-  expect(shown).not.toContain('.ai-memory-data')
+  expect(shown).not.toContain('.spool')
   expect(shown).not.toContain('.cache')
   await ui.unmount()
 })

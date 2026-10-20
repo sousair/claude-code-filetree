@@ -1,6 +1,6 @@
 {
   "name": "filetree",
-  "version": "0.3.3-sousair.1",
+  "version": "0.3.3-sousair.2",
   "description": "An IDE-style file tree for Claude Code that shows what Claude is doing and where in files",
   "types": "./types/index.d.ts",
   "author": {
@@ -119,7 +119,7 @@
     "ignore": {
       "type": "string",
       "title": "Ignore",
-      "description": "File and folder names to leave out of the tree, its search and its shimmer, separated by spaces or commas. A name matches at any depth, like the built-in .git and node_modules. Example: .ai-memory-data .pnpm-store",
+      "description": "File and folder names to leave out of the tree, its search and its shimmer, separated by spaces or commas. A name matches at any depth, like the built-in .git and node_modules. Example: .cache .tmp",
       "default": ""
     },
     "palette": {
